@@ -7,7 +7,7 @@ import { AuthService } from './auth';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://your-hotel-app-name.herokuapp.com/api'; // Replace with your actual Heroku URL
+  private baseUrl = 'https://hotel-booking-qpaa.onrender.com'; // Replace with your actual Heroku URL
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

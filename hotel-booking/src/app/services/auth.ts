@@ -40,7 +40,7 @@ export interface RegisterRequest {
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  private apiUrl = 'http://localhost:8000/api/auth';
+  private apiUrl = 'https://hotel-booking-qpaa.onrender.com/api/auth';
   
   constructor(private http: HttpClient) {
     // Check if user is already logged in (from localStorage)
