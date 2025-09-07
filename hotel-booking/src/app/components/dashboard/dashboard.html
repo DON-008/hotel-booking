@@ -1,0 +1,103 @@
+<!-- Dark Theme Dashboard -->
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">🏨 Hotel Booking Dashboard</h1>
+      </div>
+      <div class="header-actions">
+        <span class="welcome-text">Welcome, {{ currentUser?.first_name || currentUser?.username }}!</span>
+        <button (click)="logout()" class="btn btn-logout">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <h2 class="welcome-title">Welcome to Hotel Booking System</h2>
+        <p class="welcome-text">Manage your hotel bookings, events, and special offers all in one place.</p>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-icon">📊</div>
+          <div class="stat-text">
+            <p class="stat-label">Total Bookings</p>
+            <p class="stat-value">245</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-icon">🎉</div>
+          <div class="stat-text">
+            <p class="stat-label">Active Events</p>
+            <p class="stat-value">12</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-icon">💰</div>
+          <div class="stat-text">
+            <p class="stat-label">Special Offers</p>
+            <p class="stat-value">8</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Cards -->
+    <div class="navigation-grid">
+      <div class="nav-card" (click)="navigateTo('/events')">
+        <div class="nav-card-content">
+          <div class="nav-icon">🎪</div>
+          <div class="nav-text">
+            <h3 class="nav-title">Events Management</h3>
+            <p class="nav-description">Manage hotel events and activities</p>
+          </div>
+        </div>
+        <div class="nav-action">
+          <span class="nav-link">View Events →</span>
+        </div>
+      </div>
+
+      <div class="nav-card" (click)="navigateTo('/offers')">
+        <div class="nav-card-content">
+          <div class="nav-icon">🎯</div>
+          <div class="nav-text">
+            <h3 class="nav-title">Special Offers</h3>
+            <p class="nav-description">Create and manage promotional offers</p>
+          </div>
+        </div>
+        <div class="nav-action">
+          <span class="nav-link">View Offers →</span>
+        </div>
+      </div>
+
+      <div class="nav-card" (click)="navigateTo('/spin-wheel')">
+        <div class="nav-card-content">
+          <div class="nav-icon">🎰</div>
+          <div class="nav-text">
+            <h3 class="nav-title">Spin & Win Game</h3>
+            <p class="nav-description">Customer engagement game with prizes</p>
+          </div>
+        </div>
+        <div class="nav-action">
+          <span class="nav-link">Play Game →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

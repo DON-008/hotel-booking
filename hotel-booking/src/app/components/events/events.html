@@ -1,0 +1,402 @@
+<!-- Dark Theme Events & Special Dates Manager -->
+<div class="events-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button (click)="goBack()" class="back-btn">← Back</button>
+        <h1 class="header-title">🎂 Customer Special Dates</h1>
+      </div>
+      <div class="header-actions">
+        <button (click)="toggleCustomerForm()" class="btn btn-secondary">
+          {{ showCustomerForm ? '✕ Cancel' : '👥 Customer' }}
+        </button>
+        <button (click)="toggleSpecialDateForm()" class="btn btn-primary">
+          {{ showSpecialDateForm ? '✕ Cancel' : '+ Add Special Date' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Special Date Form - Glassmorphism Modal -->
+    <div *ngIf="showSpecialDateForm" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="modal-title">
+          {{ isEditMode ? 'Edit Special Date' : 'Add New Special Date' }}
+        </h3>
+        
+        <form (ngSubmit)="saveSpecialDate()" class="form">
+          <div class="form-grid">
+            <!-- Customer Name -->
+            <div class="form-group">
+              <label class="form-label">Customer Name *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newSpecialDate.customerName" 
+                name="customerName"
+                required
+                class="form-input"
+                placeholder="Enter customer name">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="newSpecialDate.phone" 
+                name="phone"
+                required
+                class="form-input"
+                placeholder="+1 (555) 123-4567">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label">Email (Optional)</label>
+              <input 
+                type="email" 
+                [(ngModel)]="newSpecialDate.email" 
+                name="email"
+                class="form-input"
+                placeholder="customer@email.com">
+            </div>
+
+            <!-- Special Date Type -->
+            <div class="form-group">
+              <label class="form-label">Special Date Type *</label>
+              <select 
+                [(ngModel)]="newSpecialDate.specialDateType" 
+                name="specialDateType"
+                required
+                class="form-select">
+                <option value="" disabled>Select type...</option>
+                <option *ngFor="let type of specialDateTypes" [value]="type">{{ type }}</option>
+              </select>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group full-width">
+              <label class="form-label">Date *</label>
+              <input 
+                type="date" 
+                [(ngModel)]="newSpecialDate.date" 
+                name="date"
+                required
+                class="form-input">
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group full-width">
+              <label class="form-label">Notes (Optional)</label>
+              <textarea 
+                [(ngModel)]="newSpecialDate.notes" 
+                name="notes"
+                rows="3"
+                class="form-textarea"
+                placeholder="Special preferences, dietary requirements, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" (click)="toggleSpecialDateForm()" class="btn btn-cancel">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!isValidForm()" class="btn btn-submit">
+              {{ isEditMode ? 'Update' : 'Save' }} Special Date
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Send Wish Modal -->
+    <div *ngIf="showSendWishModal" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="modal-title">
+          🎉 Send {{ selectedCustomer?.specialDateType }} Wishes
+        </h3>
+        
+        <!-- Customer Info -->
+        <div class="customer-info">
+          <h4 class="customer-name">{{ selectedCustomer?.customerName }}</h4>
+          <p class="customer-details">{{ selectedCustomer?.phone }} | {{ selectedCustomer?.specialDateType }} on {{ selectedCustomer?.date }}</p>
+        </div>
+        
+        <form (ngSubmit)="sendWishMessage()" class="form">
+          <!-- Include Offer Checkbox -->
+          <div class="form-group">
+            <div class="checkbox-group">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="sendWishForm.includeOffer" 
+                name="includeOffer"
+                id="includeOffer"
+                class="checkbox-input">
+              <label for="includeOffer" class="checkbox-label">
+                🎁 Include Special Offer
+              </label>
+            </div>
+          </div>
+
+          <!-- Select Offer (Conditional) -->
+          <div *ngIf="sendWishForm.includeOffer" class="form-group">
+            <label class="form-label">Choose Special Offer *</label>
+            <select 
+              [(ngModel)]="sendWishForm.selectedOfferId" 
+              name="selectedOfferId"
+              required
+              class="form-select">
+              <option value="" disabled>Select an offer to include...</option>
+              <option *ngFor="let offer of availableOffers" [value]="offer.id">
+                {{ offer.title }} - {{ offer.discount }}{{ offer.type === 'percentage' ? '%' : '$' }} off
+              </option>
+            </select>
+          </div>
+
+          <!-- Offer Preview (Conditional) -->
+          <div *ngIf="sendWishForm.includeOffer && getSelectedOffer()" class="offer-preview">
+            <div class="offer-preview-content">
+              <h5 class="offer-preview-title">{{ getSelectedOffer()?.title }}</h5>
+              <div class="offer-preview-discount">
+                {{ getSelectedOffer()?.discount }}{{ getSelectedOffer()?.type === 'percentage' ? '%' : '$' }} OFF
+              </div>
+            </div>
+          </div>
+
+          <!-- Communication Method -->
+          <div class="form-group">
+            <label class="form-label">Communication Method *</label>
+            <div class="communication-options">
+              <div *ngFor="let method of communicationMethods" class="communication-option">
+                <input 
+                  type="radio" 
+                  [(ngModel)]="sendWishForm.communicationMethod" 
+                  name="communicationMethod"
+                  [value]="method.value"
+                  [id]="method.value"
+                  class="radio-input">
+                <label [for]="method.value" class="radio-label">
+                  <span class="radio-icon">{{ method.icon }}</span>
+                  <span class="radio-text">{{ method.label }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Message -->
+          <div class="form-group">
+            <label class="form-label">Custom Message (Optional)</label>
+            <textarea 
+              [(ngModel)]="sendWishForm.customMessage" 
+              name="customMessage"
+              rows="3"
+              class="form-textarea"
+              placeholder="Add a personal message to make it special..."></textarea>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" (click)="toggleSendWishModal()" class="btn btn-cancel">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!isWishFormValid()" class="btn btn-send">
+              🎉 Send Wishes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div *ngIf="showCustomerForm" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="modal-title">👥 Add New Customer</h3>
+        
+        <form (ngSubmit)="saveCustomer()" class="form">
+          <div class="form-grid">
+            <!-- Customer Name -->
+            <div class="form-group">
+              <label class="form-label">Customer Name *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newCustomer.customerName" 
+                name="customerName"
+                required
+                class="form-input"
+                placeholder="Enter customer name">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="newCustomer.phone" 
+                name="phone"
+                required
+                class="form-input"
+                placeholder="+1 (555) 123-4567">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label">Email (Optional)</label>
+              <input 
+                type="email" 
+                [(ngModel)]="newCustomer.email" 
+                name="email"
+                class="form-input"
+                placeholder="customer@email.com">
+            </div>
+
+            <!-- Birth Date -->
+            <div class="form-group">
+              <label class="form-label">Birth Date *</label>
+              <input 
+                type="date" 
+                [(ngModel)]="newCustomer.birthDate" 
+                name="birthDate"
+                required
+                class="form-input">
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" (click)="toggleCustomerForm()" class="btn btn-cancel">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!isValidCustomerForm()" class="btn btn-submit">
+              Save Customer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Filter Cards / Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card filter-card" 
+           [class.active]="selectedFilter === 'All'"
+           (click)="setFilter('All')">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">All Special Dates</p>
+            <p class="stat-value">{{ specialDates.length }}</p>
+          </div>
+          <div class="stat-icon">🎂</div>
+        </div>
+      </div>
+
+      <div class="stat-card filter-card" 
+           [class.active]="selectedFilter === 'Birthday'"
+           (click)="setFilter('Birthday')">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Birthdays</p>
+            <p class="stat-value">{{ getBirthdayCount() }}</p>
+          </div>
+          <div class="stat-icon">🎉</div>
+        </div>
+      </div>
+
+      <div class="stat-card filter-card" 
+           [class.active]="selectedFilter === 'Wedding Anniversary'"
+           (click)="setFilter('Wedding Anniversary')">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Wedding Anniversary</p>
+            <p class="stat-value">{{ getWeddingAnniversaryCount() }}</p>
+          </div>
+          <div class="stat-icon">💒</div>
+        </div>
+      </div>
+
+      <div class="stat-card filter-card" 
+           [class.active]="selectedFilter === 'Anniversary'"
+           (click)="setFilter('Anniversary')">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Anniversaries</p>
+            <p class="stat-value">{{ getAnniversaryCount() }}</p>
+          </div>
+          <div class="stat-icon">💝</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming Special Dates -->
+    <div *ngIf="getUpcomingDates().length > 0" class="section-card">
+      <div class="section-header-compact">
+        <h3 class="section-title">🎉 Upcoming Special Dates</h3>
+        <button (click)="sendWishToAll()" class="btn btn-send-all">
+          🎉 Send Wish All
+        </button>
+      </div>
+      <div class="upcoming-grid">
+        <div *ngFor="let specialDate of getUpcomingDates()" class="upcoming-card">
+          <div class="upcoming-header">
+            <h4 class="upcoming-name">{{ specialDate.customerName }}</h4>
+            <span class="upcoming-type">{{ specialDate.specialDateType }}</span>
+          </div>
+          <p class="upcoming-date">📅 {{ specialDate.date }}</p>
+          <p class="upcoming-phone">📞 {{ specialDate.phone }}</p>
+          <p *ngIf="specialDate.notes" class="upcoming-notes">{{ specialDate.notes }}</p>
+          <div class="upcoming-actions">
+            <button (click)="sendWish(specialDate)" class="btn btn-send-wish-small">Send Wish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special Dates List -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">📋 {{ getFilterTitle() }}</h3>
+      </div>
+
+      <div class="table-container">
+        <div *ngFor="let specialDate of getFilteredSpecialDates()" class="table-row">
+          <div class="row-content">
+            <div class="row-grid">
+              <div class="row-cell">
+                <p class="cell-primary">{{ specialDate.customerName }}</p>
+                <p class="cell-secondary">{{ specialDate.phone }}</p>
+              </div>
+              <div class="row-cell">
+                <p class="cell-primary">{{ specialDate.specialDateType }}</p>
+                <p *ngIf="specialDate.email" class="cell-secondary">{{ specialDate.email }}</p>
+              </div>
+              <div class="row-cell">
+                <p class="cell-primary">📅 {{ specialDate.date }}</p>
+                <p class="cell-secondary">Added: {{ specialDate.createdAt }}</p>
+              </div>
+              <div class="row-cell">
+                <p *ngIf="specialDate.notes" class="cell-notes">"{{ specialDate.notes }}"</p>
+              </div>
+            </div>
+            <div class="row-actions">
+              <button (click)="editSpecialDate(specialDate)" class="btn btn-edit">Edit</button>
+              <button (click)="deleteSpecialDate(specialDate.id!)" class="btn btn-delete">Delete</button>
+              <button (click)="sendWish(specialDate)" class="btn btn-send-wish">Send Wish</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="getFilteredSpecialDates().length === 0" class="empty-state">
+        <div class="empty-icon">🎂</div>
+        <h3 class="empty-title">No {{ selectedFilter === 'All' ? 'special dates' : selectedFilter.toLowerCase() + ' dates' }} yet</h3>
+        <p class="empty-text">{{ selectedFilter === 'All' ? 'Start tracking your customers\' important dates to provide personalized service!' : 'No ' + selectedFilter.toLowerCase() + ' dates found in your records.' }}</p>
+      </div>
+    </div>
+
+  </div>
+</div>

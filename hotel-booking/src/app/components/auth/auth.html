@@ -1,0 +1,116 @@
+<div style="min-height: 100vh; background: linear-gradient(135deg, #9f7aea, #ed64a6); display: flex; align-items: center; justify-content: center; padding: 1rem;">
+  <div style="background: white; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 2rem; width: 100%; max-width: 400px;">
+    <!-- Header -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h2 style="font-size: 2rem; font-weight: bold; color: #1a202c; margin: 0;">🏨 Hotel Booking</h2>
+      <p style="color: #718096; margin-top: 0.5rem;">
+        {{ isLoginMode ? 'Sign in to your account' : 'Create a new account' }}
+      </p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" style="background: #fed7d7; border: 1px solid #fc8181; color: #c53030; padding: 0.75rem 1rem; border-radius: 4px; margin-bottom: 1rem;">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Login Form -->
+    <form *ngIf="isLoginMode" (ngSubmit)="onLogin()" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Email</label>
+        <input 
+          type="email" 
+          [(ngModel)]="loginForm.email" 
+          name="email"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Enter your email">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Password</label>
+        <input 
+          type="password" 
+          [(ngModel)]="loginForm.password" 
+          name="password"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Enter your password">
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="isLoading"
+        style="width: 100%; padding: 0.75rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer;"
+        [style.opacity]="isLoading ? '0.5' : '1'">
+        <span *ngIf="isLoading" style="margin-right: 0.5rem;">⏳</span>
+        {{ isLoading ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <!-- Register Form -->
+    <form *ngIf="!isLoginMode" (ngSubmit)="onRegister()" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Full Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="registerForm.name" 
+          name="name"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Enter your full name">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Email</label>
+        <input 
+          type="email" 
+          [(ngModel)]="registerForm.email" 
+          name="email"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Enter your email">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Password</label>
+        <input 
+          type="password" 
+          [(ngModel)]="registerForm.password" 
+          name="password"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Enter your password">
+      </div>
+
+      <div>
+        <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem;">Confirm Password</label>
+        <input 
+          type="password" 
+          [(ngModel)]="registerForm.confirmPassword" 
+          name="confirmPassword"
+          required
+          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem;"
+          placeholder="Confirm your password">
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="isLoading"
+        style="width: 100%; padding: 0.75rem 1rem; background: #7c3aed; color: white; border: none; border-radius: 6px; font-size: 0.875rem; font-weight: 500; cursor: pointer;"
+        [style.opacity]="isLoading ? '0.5' : '1'">
+        <span *ngIf="isLoading" style="margin-right: 0.5rem;">⏳</span>
+        {{ isLoading ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <!-- Toggle between login/register -->
+    <div style="margin-top: 1.5rem; text-align: center;">
+      <button 
+        type="button" 
+        (click)="toggleMode()" 
+        style="background: none; border: none; color: #7c3aed; font-weight: 500; cursor: pointer; text-decoration: underline;">
+        {{ isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Sign in" }}
+      </button>
+    </div>
+  </div>
+</div>

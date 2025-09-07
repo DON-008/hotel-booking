@@ -1,0 +1,249 @@
+<!-- Dark Theme Offers Manager -->
+<div class="offers-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button (click)="goBack()" class="back-btn">← Back</button>
+        <h1 class="header-title">🎯 Special Offers</h1>
+      </div>
+      <div class="header-actions">
+        <button (click)="toggleOfferForm()" class="btn btn-primary">
+          {{ showOfferForm ? '✕ Cancel' : '+ Create Offer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Debug Section -->
+  <div class="debug-section" style="background: rgba(255,0,0,0.1); padding: 10px; margin: 10px; border: 1px solid red;">
+    <h4>Debug Info:</h4>
+    <p>Loading: {{ loading }}</p>
+    <p>Error: {{ error }}</p>
+    <p>Offers Count: {{ offers.length }}</p>
+    <p>Offers Data: {{ offers | json }}</p>
+    <p>Active Offers Count: {{ activeOffersCount }}</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Offer Form - Glassmorphism Modal -->
+    <div *ngIf="showOfferForm" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="modal-title">
+          {{ isEditMode ? 'Edit Special Offer' : 'Create New Offer' }}
+        </h3>
+        
+        <form (ngSubmit)="saveOffer()" class="form">
+          <div class="form-grid">
+            <!-- Offer Title -->
+            <div class="form-group">
+              <label class="form-label">Offer Title *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newOffer.title" 
+                name="title"
+                required
+                class="form-input"
+                placeholder="e.g., Weekend Special">
+            </div>
+
+            <!-- Offer Type -->
+            <div class="form-group">
+              <label class="form-label">Discount Type *</label>
+              <select 
+                [(ngModel)]="newOffer.type" 
+                name="type"
+                required
+                class="form-select">
+                <option value="percentage">Percentage (%)</option>
+                <option value="fixed">Fixed Amount ($)</option>
+              </select>
+            </div>
+
+            <!-- Discount Amount -->
+            <div class="form-group">
+              <label class="form-label">Discount Amount *</label>
+              <input 
+                type="number" 
+                [(ngModel)]="newOffer.discount" 
+                name="discount"
+                required
+                min="1"
+                class="form-input"
+                [placeholder]="newOffer.type === 'percentage' ? 'e.g., 25' : 'e.g., 50'">
+            </div>
+
+            <!-- Status -->
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select 
+                [(ngModel)]="newOffer.status" 
+                name="status"
+                class="form-select">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group full-width">
+              <label class="form-label">Description *</label>
+              <textarea 
+                [(ngModel)]="newOffer.description" 
+                name="description"
+                required
+                rows="3"
+                class="form-textarea"
+                placeholder="Describe this special offer and its benefits..."></textarea>
+            </div>
+
+            <!-- Valid From -->
+            <div class="form-group">
+              <label class="form-label">Valid From *</label>
+              <input 
+                type="date" 
+                [(ngModel)]="newOffer.validFrom" 
+                name="validFrom"
+                required
+                class="form-input">
+            </div>
+
+            <!-- Valid To -->
+            <div class="form-group">
+              <label class="form-label">Valid To *</label>
+              <input 
+                type="date" 
+                [(ngModel)]="newOffer.validTo" 
+                name="validTo"
+                required
+                class="form-input">
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" (click)="toggleOfferForm()" class="btn btn-cancel">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!isValidForm()" class="btn btn-submit">
+              {{ isEditMode ? 'Update' : 'Create' }} Offer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Active Offers</p>
+            <p class="stat-value">{{ activeOffersCount }}</p>
+          </div>
+          <div class="stat-icon">✅</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Total Offers</p>
+            <p class="stat-value">{{ offers.length }}</p>
+          </div>
+          <div class="stat-icon">🎯</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Average Discount</p>
+            <p class="stat-value">{{ averageDiscount }}%</p>
+          </div>
+          <div class="stat-icon">💰</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-content">
+          <div class="stat-text">
+            <p class="stat-label">Inactive Offers</p>
+            <p class="stat-value">{{ getInactiveOffersCount() }}</p>
+          </div>
+          <div class="stat-icon">⏸️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offers Grid -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">💎 All Special Offers</h3>
+      </div>
+
+      <div class="offers-grid">
+        <div *ngFor="let offer of offers" class="offer-card">
+          <!-- Status Badge -->
+          <div class="offer-header">
+            <span class="status-badge" [class.active]="offer.status === 'active'">
+              {{ offer.status === 'active' ? 'Active' : 'Inactive' }}
+            </span>
+            <div class="offer-actions-header">
+              <button (click)="startEditOffer(offer)" class="icon-btn edit">✏️</button>
+              <button (click)="deleteOffer(offer.id)" class="icon-btn delete">🗑️</button>
+            </div>
+          </div>
+
+          <!-- Offer Details -->
+          <h3 class="offer-title">{{ offer.title }}</h3>
+          <p class="offer-description">{{ offer.description }}</p>
+
+          <!-- Discount Display -->
+          <div class="discount-display">
+            <div class="discount-amount">
+              {{ offer.type === 'percentage' ? offer.discount + '%' : '$' + offer.discount }}
+            </div>
+            <div class="discount-label">
+              {{ offer.type === 'percentage' ? 'OFF' : 'DISCOUNT' }}
+            </div>
+          </div>
+
+          <!-- Validity Dates -->
+          <div class="validity-info">
+            <div class="validity-row">
+              <span class="validity-label">Valid from:</span>
+              <span class="validity-date">{{ offer.validFrom }}</span>
+            </div>
+            <div class="validity-row">
+              <span class="validity-label">Valid to:</span>
+              <span class="validity-date">{{ offer.validTo }}</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="offer-actions">
+            <button 
+              (click)="toggleStatus(offer)"
+              class="btn"
+              [class.btn-deactivate]="offer.status === 'active'"
+              [class.btn-activate]="offer.status !== 'active'">
+              {{ offer.status === 'active' ? 'Deactivate' : 'Activate' }}
+            </button>
+            <button (click)="startEditOffer(offer)" class="btn btn-edit">Edit</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="offers.length === 0" class="empty-state">
+        <div class="empty-icon">🎯</div>
+        <h3 class="empty-title">No offers yet</h3>
+        <p class="empty-text">Create your first special offer to attract more customers!</p>
+      </div>
+    </div>
+
+  </div>
+</div>

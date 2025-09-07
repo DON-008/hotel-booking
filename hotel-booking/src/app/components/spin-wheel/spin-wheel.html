@@ -1,0 +1,175 @@
+<!-- Dark Theme Spin Wheel Game -->
+<div class="spin-wheel-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <button (click)="goBack()" class="back-btn">← Back</button>
+        <h1 class="header-title">🎰 Spin & Win!</h1>
+      </div>
+      <div class="header-actions">
+        <button (click)="toggleCustomerForm()" class="btn btn-primary">
+          {{ showCustomerForm ? '✕ Cancel' : '👤 New Customer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    
+    <!-- Customer Form Modal -->
+    <div *ngIf="showCustomerForm" class="modal-overlay">
+      <div class="modal-content">
+        <h3 class="modal-title">🎯 Enter Your Details to Play</h3>
+        
+        <form (ngSubmit)="saveCustomer()" class="form">
+          <div class="form-grid">
+            <!-- Customer Name -->
+            <div class="form-group">
+              <label class="form-label">Your Name *</label>
+              <input 
+                type="text" 
+                [(ngModel)]="newCustomer.customerName" 
+                name="customerName"
+                required
+                class="form-input"
+                placeholder="Enter your name">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input 
+                type="tel" 
+                [(ngModel)]="newCustomer.phone" 
+                name="phone"
+                required
+                class="form-input"
+                placeholder="+1 (555) 123-4567">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label">Email (Optional)</label>
+              <input 
+                type="email" 
+                [(ngModel)]="newCustomer.email" 
+                name="email"
+                class="form-input"
+                placeholder="your@email.com">
+            </div>
+
+            <!-- Birth Date -->
+            <div class="form-group">
+              <label class="form-label">Birth Date *</label>
+              <input 
+                type="date" 
+                [(ngModel)]="newCustomer.birthDate" 
+                name="birthDate"
+                required
+                class="form-input">
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" (click)="toggleCustomerForm()" class="btn btn-cancel">
+              Cancel
+            </button>
+            <button type="submit" [disabled]="!isValidCustomerForm()" class="btn btn-submit">
+              Start Playing! 🎉
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Welcome Section -->
+    <div *ngIf="!currentCustomer && !showCustomerForm" class="welcome-section">
+      <div class="welcome-content">
+        <div class="welcome-icon">🎰</div>
+        <h2 class="welcome-title">Welcome to Our Spin & Win Game!</h2>
+        <p class="welcome-text">Enter your details and spin the wheel to win amazing prizes!</p>
+        <div class="game-rules">
+          <p class="rules-text">🎯 <strong>One-Time Play Only:</strong> Each customer can play this game only once!</p>
+          <p class="rules-text">🎁 <strong>Amazing Prizes:</strong> Free beer, crisps, discounts, and more!</p>
+        </div>
+        <button (click)="toggleCustomerForm()" class="btn btn-primary btn-large">
+          🎯 Start Playing Now!
+        </button>
+      </div>
+    </div>
+
+    <!-- Spin Wheel Section -->
+    <div *ngIf="currentCustomer && !showResult" class="spin-wheel-section">
+      <div class="customer-info">
+        <h3 class="customer-name">🎉 Welcome, {{ currentCustomer.customerName }}!</h3>
+        <p class="customer-details">Ready to spin and win? Click the button below!</p>
+      </div>
+
+      <div class="wheel-container">
+        <div class="wheel" [class.spinning]="isSpinning">
+          <div class="wheel-center">
+            <div class="wheel-pointer">🎯</div>
+          </div>
+          <div class="wheel-segments">
+            <div *ngFor="let prize of prizes; let i = index" 
+                 class="wheel-segment"
+                 [style.transform]="'rotate(' + (i * (360 / prizes.length)) + 'deg)'">
+              <div class="segment-content">
+                <div class="segment-icon">{{ prize.icon }}</div>
+                <div class="segment-text">{{ prize.name }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spin-actions">
+        <button 
+          (click)="spinWheel()" 
+          [disabled]="!canSpin || isSpinning"
+          class="btn btn-spin"
+          [class.spinning]="isSpinning">
+          {{ isSpinning ? '🎰 Spinning...' : '🎰 Spin the Wheel!' }}
+        </button>
+      </div>
+
+      <!-- Prize List -->
+      <div class="prizes-section">
+        <h3 class="section-title">🎁 Available Prizes</h3>
+        <div class="prizes-grid">
+          <div *ngFor="let prize of prizes" class="prize-card">
+            <div class="prize-icon">{{ prize.icon }}</div>
+            <h4 class="prize-name">{{ prize.name }}</h4>
+            <p class="prize-description">{{ prize.description }}</p>
+            <div class="prize-probability">{{ prize.probability }}% chance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result Section -->
+    <div *ngIf="showResult && spinResult" class="result-section">
+      <div class="result-content">
+        <div class="result-icon">{{ spinResult.icon }}</div>
+        <h2 class="result-title">{{ spinResult.name }}</h2>
+        <p class="result-description">{{ spinResult.description }}</p>
+        
+        <div class="result-actions">
+          <button (click)="playAgain()" class="btn btn-primary">
+            🎰 Try Again
+          </button>
+          <button (click)="startNewCustomer()" class="btn btn-secondary">
+            👤 New Customer
+          </button>
+        </div>
+        <div class="play-info">
+          <p class="play-info-text">🎯 Remember: Each customer can only play once!</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
