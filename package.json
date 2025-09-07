@@ -1,0 +1,29 @@
+{
+  "name": "hotel-booking-system",
+  "version": "1.0.0",
+  "description": "Hotel Booking System with Angular Frontend and Django Backend",
+  "scripts": {
+    "build:frontend": "cd hotel-booking && npm install && npm run build",
+    "start:frontend": "cd hotel-booking && npm start",
+    "install:frontend": "cd hotel-booking && npm install",
+    "test:frontend": "cd hotel-booking && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DON-008/hotel-booking.git"
+  },
+  "keywords": [
+    "hotel",
+    "booking",
+    "angular",
+    "django",
+    "restaurant",
+    "management"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
