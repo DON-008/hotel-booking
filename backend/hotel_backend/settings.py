@@ -162,13 +162,13 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://127.0.0.1:4200",
-    "https://your-netlify-app.netlify.app",  # Replace with your actual Netlify URL
+    "https://spiffy-jelly-c19009.netlify.app",  # Your actual Netlify URL
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 # For production, set to False and specify exact origins
-CORS_ALLOW_ALL_ORIGINS = os.getenv('CORS_ALLOW_ALL_ORIGINS', 'False').lower() == 'true'
+CORS_ALLOW_ALL_ORIGINS = False
 
 # WhatsApp Configuration
 # Choose one of the following WhatsApp services and configure accordingly:

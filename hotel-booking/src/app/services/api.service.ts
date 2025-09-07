@@ -7,7 +7,7 @@ import { AuthService } from './auth';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://hotel-booking-qpaa.onrender.com'; // Replace with your actual Heroku URL
+  private baseUrl = 'https://hotel-booking-qpaa.onrender.com/api'; // Your Render backend URL with API path
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
