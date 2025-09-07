@@ -6,7 +6,7 @@
   command = "cd hotel-booking && npm ci && npm run build"
   
   # Directory to publish
-  publish = "hotel-booking/dist/hotel-booking"
+  publish = "hotel-booking/dist/hotel-booking/browser"
 
 [build.environment]
   # Node.js version - Angular CLI 20.2.4 requires Node.js v20.19+
