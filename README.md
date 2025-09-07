@@ -1,179 +1,293 @@
-# Hotel Booking System
+# 🏨 Hotel Booking System
 
-A comprehensive hotel booking system with special date tracking, offers management, and customer engagement features.
+A modern, full-stack hotel booking and restaurant management system built with Angular and Django. This system is designed for hotels whose main business is restaurants, focusing on customer special dates tracking, offers management, and automated WhatsApp messaging.
+
+## 🌟 Features
+
+### 🎯 Core Functionality
+- **Customer Management**: Store and manage customer information
+- **Special Dates Tracking**: Track birthdays, anniversaries, and other special occasions
+- **Offers Management**: Create and manage promotional offers
+- **WhatsApp Integration**: Automated wish messages with special offers
+- **Spin Wheel Game**: Interactive customer engagement tool
+- **Dashboard**: Comprehensive overview of upcoming events and analytics
+
+### 🎨 Modern UI/UX
+- **Glassmorphism Design**: Modern, elegant dark theme
+- **Responsive Layout**: Works perfectly on desktop, tablet, and mobile
+- **Angular Material**: Professional component library
+- **SCSS Styling**: Advanced CSS with custom animations
+
+### 🔧 Technical Features
+- **JWT Authentication**: Secure user authentication
+- **RESTful API**: Django REST Framework backend
+- **Real-time Updates**: Live data synchronization
+- **Lazy Loading**: Optimized performance with lazy-loaded modules
+- **PWA Ready**: Progressive Web App capabilities
 
 ## 🏗️ Project Structure
 
 ```
 hotel/
-├── frontend/                 # Angular Frontend
-│   └── hotel-booking/       # Angular application
 ├── backend/                 # Django Backend
-│   ├── hotel_backend/       # Django project settings
-│   ├── customer_management/ # Customer management app
-│   ├── events/             # Events & special dates app
-│   ├── offers/             # Offers management app
-│   ├── spin_wheel/         # Spin wheel game app
-│   ├── manage.py           # Django management script
-│   ├── requirements.txt    # Python dependencies
-│   ├── db.sqlite3         # SQLite database
-│   └── README.md          # Backend documentation
-└── README.md              # This file
+│   ├── authentication/     # User authentication
+│   ├── customer_management/ # Customer CRUD operations
+│   ├── events/             # Special dates management
+│   ├── offers/             # Offers management
+│   ├── spin_wheel/         # Spin wheel game
+│   ├── whatsapp/           # WhatsApp integration
+│   └── hotel_backend/      # Django settings
+├── hotel-booking/          # Angular Frontend
+│   ├── src/app/components/ # Angular components
+│   ├── src/app/services/   # API services
+│   └── src/app/guards/     # Route guards
+└── README.md
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- Python (v3.8 or higher)
-- Angular CLI
-- pip (Python package manager)
-
-### Frontend Setup (Angular)
-```bash
-cd frontend/hotel-booking
-npm install
-ng serve
-```
-Frontend will be available at: `http://localhost:4200`
+- Node.js (v18 or higher)
+- Python (v3.11 or higher)
+- Git
 
 ### Backend Setup (Django)
-```bash
-cd backend
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
+
+1. **Navigate to backend directory:**
+   ```bash
+   cd backend
+   ```
+
+2. **Create virtual environment:**
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+   # source venv/bin/activate  # Linux/Mac
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run migrations:**
+   ```bash
+   python manage.py migrate
+   ```
+
+5. **Create superuser:**
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+6. **Start development server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+### Frontend Setup (Angular)
+
+1. **Navigate to frontend directory:**
+   ```bash
+   cd hotel-booking
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+   ```bash
+   npm start
+   ```
+
+4. **Access the application:**
+   - Frontend: http://localhost:4200
+   - Backend API: http://localhost:8000/api
+   - Django Admin: http://localhost:8000/admin
+
+## 📱 Deployment
+
+### Option 1: Netlify + Heroku (Recommended)
+
+#### Frontend to Netlify:
+1. Build the Angular app: `npm run build`
+2. Drag & drop `dist/hotel-booking` folder to Netlify
+3. Or connect GitHub repository for automatic deployments
+
+#### Backend to Heroku:
+1. Install Heroku CLI
+2. Create Heroku app: `heroku create your-app-name`
+3. Add PostgreSQL: `heroku addons:create heroku-postgresql:mini`
+4. Deploy: `git push heroku main`
+5. Run migrations: `heroku run python manage.py migrate`
+
+### Option 2: Vercel + Railway
+- Frontend: Deploy to Vercel
+- Backend: Deploy to Railway
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create a `.env` file in the backend directory:
+
+```env
+DEBUG=False
+SECRET_KEY=your-secret-key
+DATABASE_URL=your-database-url
+
+# WhatsApp Configuration (Optional)
+WHATSAPP_API_TOKEN=your-whatsapp-token
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
+WHATSAPP_MOCK_MODE=True
+
+# CORS Settings
+CORS_ALLOW_ALL_ORIGINS=False
 ```
-Backend will be available at: `http://localhost:8000`
 
-## 🎯 Features
+### API Configuration
 
-### Frontend (Angular)
-- **Dashboard**: Overview of hotel operations
-- **Events Management**: Track customer special dates (birthdays, anniversaries)
-- **Offers Management**: Create and manage promotional offers
-- **Spin Wheel Game**: Customer engagement game with prizes
-- **Authentication**: Secure login/logout system
-- **Responsive Design**: Glassmorphism dark theme with mobile support
+Update the API URL in `hotel-booking/src/app/services/api.service.ts`:
 
-### Backend (Django REST API)
-- **Customer Management**: Store and manage customer information
-- **Special Dates Tracking**: Track birthdays, anniversaries, and other special dates
-- **Events Management**: Manage hotel events and bookings
-- **Offers System**: Create and manage promotional offers with usage tracking
-- **Spin Wheel Game**: Customer engagement game with one-time play restriction
-- **Admin Interface**: Complete admin panel for data management
-
-## 🔧 Technology Stack
-
-### Frontend
-- **Angular 18**: Modern web framework
-- **SCSS**: Advanced CSS with variables and mixins
-- **Glassmorphism Design**: Modern UI with dark theme
-- **Responsive Layout**: Mobile-first design approach
-
-### Backend
-- **Django 5.0**: Python web framework
-- **Django REST Framework**: API development
-- **SQLite**: Database (easily configurable for production)
-- **CORS**: Cross-origin resource sharing for frontend integration
+```typescript
+private baseUrl = 'https://your-backend-url.com/api';
+```
 
 ## 📊 API Endpoints
 
-### Customer Management
-- `GET /api/customers/customers/` - List all customers
-- `POST /api/customers/customers/` - Create new customer
-- `GET /api/customers/customers/{id}/` - Get customer details
-- `GET /api/customers/customers/search/?q=query` - Search customers
+### Authentication
+- `POST /api/auth/register/` - User registration
+- `POST /api/auth/login/` - User login
+- `POST /api/auth/logout/` - User logout
 
-### Events & Special Dates
+### Customers
+- `GET /api/customers/` - List customers
+- `POST /api/customers/` - Create customer
+- `GET /api/customers/{id}/` - Get customer details
+- `PUT /api/customers/{id}/` - Update customer
+- `DELETE /api/customers/{id}/` - Delete customer
+
+### Special Dates
 - `GET /api/events/special-dates/` - List special dates
 - `POST /api/events/special-dates/` - Create special date
-- `GET /api/events/special-dates/upcoming/` - Get upcoming special dates
-- `GET /api/events/events/` - List events
-- `POST /api/events/events/{id}/book/` - Book an event
+- `PUT /api/events/special-dates/{id}/` - Update special date
+- `DELETE /api/events/special-dates/{id}/` - Delete special date
 
-### Offers Management
-- `GET /api/offers/offers/` - List offers
-- `POST /api/offers/offers/` - Create offer
-- `GET /api/offers/offers/active/` - Get active offers
-- `POST /api/offers/offers/{id}/use/` - Use an offer
+### Offers
+- `GET /api/offers/` - List offers
+- `POST /api/offers/` - Create offer
+- `PUT /api/offers/{id}/` - Update offer
+- `DELETE /api/offers/{id}/` - Delete offer
 
-### Spin Wheel Game
-- `GET /api/spin-wheel/prizes/` - List prizes
-- `POST /api/spin-wheel/games/play/` - Play spin wheel game
-- `PATCH /api/spin-wheel/games/{id}/claim/` - Claim prize
-- `GET /api/spin-wheel/sessions/available-customers/` - Get available customers
+### WhatsApp
+- `POST /api/whatsapp/send-wish/` - Send wish message
+- `POST /api/whatsapp/send-message/` - Send custom message
 
-## 🎨 Design Features
+## 🎮 Usage Guide
 
-### Glassmorphism Theme
-- **Transparent Cards**: Backdrop blur effects
-- **Dark Theme**: Modern dark color scheme
-- **Gradient Accents**: Beautiful color gradients
-- **Smooth Animations**: Hover effects and transitions
-- **Responsive Grid**: Adaptive layout for all screen sizes
+### 1. Authentication
+- Register a new account or login with existing credentials
+- Access is required for all features except authentication
 
-### User Experience
-- **Intuitive Navigation**: Easy-to-use interface
-- **Real-time Updates**: Live data synchronization
-- **Form Validation**: Client and server-side validation
-- **Error Handling**: User-friendly error messages
-- **Loading States**: Visual feedback for async operations
+### 2. Dashboard
+- View upcoming special dates
+- Quick access to all features
+- Analytics and statistics
 
-## 🔐 Security Features
+### 3. Events Management
+- Add new customers and their special dates
+- Filter by date type (Birthday, Anniversary, etc.)
+- Send automated wishes via WhatsApp or SMS
 
-- **Authentication**: Secure login system
-- **Authorization**: Role-based access control
-- **CORS Protection**: Configured for specific origins
-- **Input Validation**: Server-side data validation
-- **SQL Injection Protection**: Django ORM protection
+### 4. Offers Management
+- Create promotional offers
+- Set discount values and types
+- Activate/deactivate offers
+- Use offers in wish messages
 
-## 📱 Mobile Support
+### 5. Spin Wheel Game
+- Interactive customer engagement
+- One-time play per customer
+- Collect customer data for marketing
 
-- **Responsive Design**: Works on all device sizes
-- **Touch-Friendly**: Optimized for mobile interactions
-- **Progressive Web App**: PWA capabilities
-- **Offline Support**: Service worker implementation
+## 🔒 Security Features
 
-## 🚀 Deployment
+- JWT token-based authentication
+- CORS protection
+- Input validation and sanitization
+- Secure password hashing
+- Environment variable protection
 
-### Frontend Deployment
-```bash
-cd frontend/hotel-booking
-ng build --prod
-# Deploy dist/ folder to your web server
-```
+## 🎨 Design System
 
-### Backend Deployment
+### Color Palette
+- Primary: Purple gradient (#a855f7 to #ec4899)
+- Background: Dark glassmorphism
+- Text: White with transparency
+- Accents: Glass effects with blur
+
+### Typography
+- Modern, clean fonts
+- Responsive sizing
+- Gradient text effects
+- Proper contrast ratios
+
+## 🚀 Performance Optimizations
+
+- Lazy loading for Angular modules
+- OnPush change detection
+- Optimized bundle sizes
+- Efficient API pagination
+- Caching strategies
+
+## 🧪 Testing
+
+### Backend Testing
 ```bash
 cd backend
-# Configure production database (PostgreSQL recommended)
-# Set DEBUG = False in settings
-# Configure static file serving
-# Deploy to your server
+python manage.py test
 ```
+
+### Frontend Testing
+```bash
+cd hotel-booking
+npm test
+```
+
+## 📈 Future Enhancements
+
+- [ ] Real-time notifications
+- [ ] Advanced analytics dashboard
+- [ ] Email marketing integration
+- [ ] Multi-language support
+- [ ] Mobile app development
+- [ ] Advanced reporting features
 
 ## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Add tests if applicable
 5. Submit a pull request
 
 ## 📄 License
 
-This project is part of the Hotel Booking System.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🆘 Support
 
 For support and questions:
-- Check the documentation in each folder
+- Create an issue in the GitHub repository
+- Check the documentation
 - Review the API endpoints
-- Test with the provided test scripts
+
+## 🎯 Demo
+
+Live demo available at: [Your deployed URL]
 
 ---
 
-**Happy Coding! 🎉**
+**Built with ❤️ using Angular and Django**
