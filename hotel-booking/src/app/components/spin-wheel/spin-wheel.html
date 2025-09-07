@@ -8,6 +8,9 @@
         <h1 class="header-title">🎰 Spin & Win!</h1>
       </div>
       <div class="header-actions">
+        <button *ngIf="testMode" (click)="testMode = false" class="btn btn-secondary" style="margin-right: 0.5rem;">
+          Exit Test Mode
+        </button>
         <button (click)="toggleCustomerForm()" class="btn btn-primary">
           {{ showCustomerForm ? '✕ Cancel' : '👤 New Customer' }}
         </button>
@@ -106,6 +109,7 @@
       <div class="customer-info">
         <h3 class="customer-name">🎉 Welcome, {{ currentCustomer.customerName }}!</h3>
         <p class="customer-details">Ready to spin and win? Click the button below!</p>
+        <p *ngIf="testMode" class="test-mode-indicator">🧪 Test Mode Active</p>
       </div>
 
       <div class="wheel-container">
