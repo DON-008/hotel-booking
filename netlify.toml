@@ -1,12 +1,12 @@
 [build]
-  # Base directory for the build
-  base = "hotel-booking"
+  # Base directory for the build (root of repository)
+  base = "."
   
-  # Build command
-  command = "npm install && npm run build"
+  # Build command - navigate to frontend directory first
+  command = "cd hotel-booking && npm ci && npm run build"
   
   # Directory to publish
-  publish = "dist/hotel-booking"
+  publish = "hotel-booking/dist/hotel-booking"
 
 [build.environment]
   # Node.js version

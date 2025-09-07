@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Hotel Booking System with Angular Frontend and Django Backend",
   "scripts": {
+    "build": "cd hotel-booking && npm ci && npm run build",
     "build:frontend": "cd hotel-booking && npm install && npm run build",
     "start:frontend": "cd hotel-booking && npm start",
     "install:frontend": "cd hotel-booking && npm install",
