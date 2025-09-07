@@ -72,19 +72,111 @@ export class SpinWheelComponent implements OnInit {
     this.error = null;
     this.spinWheelService.getActivePrizes().subscribe({
       next: (data) => {
-        this.prizes = data.map(item => ({
-          id: parseInt(item.id),
-          name: item.name,
-          description: item.description,
-          icon: item.icon,
-          probability: item.probability
-        }));
+        if (data && data.length > 0) {
+          this.prizes = data.map(item => ({
+            id: parseInt(item.id),
+            name: item.name,
+            description: item.description,
+            icon: item.icon,
+            probability: item.probability
+          }));
+        } else {
+          // Fallback prizes if none are configured
+          this.prizes = [
+            {
+              id: 1,
+              name: 'Free Drink',
+              description: 'Get a free drink of your choice!',
+              icon: '🥤',
+              probability: 30
+            },
+            {
+              id: 2,
+              name: '10% Discount',
+              description: 'Enjoy 10% off your next meal!',
+              icon: '💰',
+              probability: 25
+            },
+            {
+              id: 3,
+              name: 'Free Appetizer',
+              description: 'Complimentary appetizer with your meal!',
+              icon: '🍤',
+              probability: 20
+            },
+            {
+              id: 4,
+              name: 'Dessert on Us',
+              description: 'Free dessert with your order!',
+              icon: '🍰',
+              probability: 15
+            },
+            {
+              id: 5,
+              name: '20% Discount',
+              description: 'Get 20% off your entire bill!',
+              icon: '🎯',
+              probability: 8
+            },
+            {
+              id: 6,
+              name: 'Free Meal',
+              description: 'Win a completely free meal!',
+              icon: '🎉',
+              probability: 2
+            }
+          ];
+        }
         this.loading = false;
       },
       error: (error) => {
-        this.error = 'Failed to load prizes';
-        this.loading = false;
         console.error('Error loading prizes:', error);
+        // Use fallback prizes on error
+        this.prizes = [
+          {
+            id: 1,
+            name: 'Free Drink',
+            description: 'Get a free drink of your choice!',
+            icon: '🥤',
+            probability: 30
+          },
+          {
+            id: 2,
+            name: '10% Discount',
+            description: 'Enjoy 10% off your next meal!',
+            icon: '💰',
+            probability: 25
+          },
+          {
+            id: 3,
+            name: 'Free Appetizer',
+            description: 'Complimentary appetizer with your meal!',
+            icon: '🍤',
+            probability: 20
+          },
+          {
+            id: 4,
+            name: 'Dessert on Us',
+            description: 'Free dessert with your order!',
+            icon: '🍰',
+            probability: 15
+          },
+          {
+            id: 5,
+            name: '20% Discount',
+            description: 'Get 20% off your entire bill!',
+            icon: '🎯',
+            probability: 8
+          },
+          {
+            id: 6,
+            name: 'Free Meal',
+            description: 'Win a completely free meal!',
+            icon: '🎉',
+            probability: 2
+          }
+        ];
+        this.loading = false;
       }
     });
   }

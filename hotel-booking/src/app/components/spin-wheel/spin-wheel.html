@@ -139,13 +139,32 @@
       <!-- Prize List -->
       <div class="prizes-section">
         <h3 class="section-title">🎁 Available Prizes</h3>
-        <div class="prizes-grid">
+        
+        <!-- Loading State -->
+        <div *ngIf="loading" class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Loading prizes...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div *ngIf="error && !loading" class="error-state">
+          <p class="error-message">{{ error }}</p>
+          <button (click)="loadPrizes()" class="btn btn-retry">Retry</button>
+        </div>
+        
+        <!-- Prizes Grid -->
+        <div *ngIf="!loading && !error && prizes.length > 0" class="prizes-grid">
           <div *ngFor="let prize of prizes" class="prize-card">
             <div class="prize-icon">{{ prize.icon }}</div>
             <h4 class="prize-name">{{ prize.name }}</h4>
             <p class="prize-description">{{ prize.description }}</p>
             <div class="prize-probability">{{ prize.probability }}% chance</div>
           </div>
+        </div>
+        
+        <!-- No Prizes State -->
+        <div *ngIf="!loading && !error && prizes.length === 0" class="no-prizes-state">
+          <p>No prizes available at the moment. Please try again later.</p>
         </div>
       </div>
     </div>
